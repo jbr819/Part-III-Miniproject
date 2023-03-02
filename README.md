@@ -1,6 +1,8 @@
 # Part-III-Miniproject
 This is a repository for Finley, Izzy and Jack's Part III Miniproject
 
+ATP2C1 gene codes for the secretory pathway Ca2+/Mn2+-ATPase pump type 1 (SPCA1) localizing at the golgi apparatus. Mutations on the human ATP2C1 gene, causing decreased levels of the SPCA1 expression, have been identified as the cause of the Hailey–Hailey disease, a rare skin disorder.
+
 ### Our Plan 
 
 1. Use **Smoldyn** to model **calcium ion** diffusion and active transport in the cell.
