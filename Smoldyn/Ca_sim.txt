@@ -1,11 +1,11 @@
 #Smoldyn calcium model
 
-##100 LENGTH UNITS IS 1uM
+## 1 um^3 in 83775 units^3
 
 graphics opengl_good
 
 dim 3
-species Ca ATP SPCA1 SERCA PMCA NaCaPump MtUni
+species Ca ATP SPCA1 SERCA PMCA NaCaPump MtUni CalSeq 
 
 time_start 0
 time_stop 3000
@@ -118,8 +118,11 @@ end_compartment
 #MOLECULES
 difc Ca 100
 color Ca(all) yellow
-display_size Ca(all) 1
-compartment_mol 500 Ca cytoplasm
+display_size Ca(all) 0.1
+compartment_mol 30000 Ca cytoplasm
+
+difc ATP 100
+compartment_mol 900000000 ATO cytoplasm
 
 end_file
 
