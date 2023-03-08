@@ -1,0 +1,128 @@
+#Smoldyn calcium model
+
+## 1 um^3 in 83775 units^3
+
+graphics opengl_good
+
+dim 3
+species Ca ATP SPCA1 SERCA PMCA NaCaPump MtUni CalSeq 
+
+time_start 0
+time_stop 3000
+time_step 1
+
+#setting reflective boundaries
+boundaries x -150 150 px
+boundaries y -150 150 px
+boundaries z -150 150 px
+
+#setting plasma membrane
+start_surface PM
+action all both reflect
+polygon both edge
+color both purple
+panel sph 0 0 0 100 20 20 
+end_surface
+
+
+#golgi surface
+start_surface golgi_mem
+action all both reflect
+color both red
+panel cyl 0 0 50 0 0 40 63 20 20 
+panel cyl 0 0 35 0 0 25 63 20 20 
+panel disk 0 0 50 63 0 0 1 20
+panel disk 0 0 40 63 0 0 1 20
+panel disk 0 0 35 63 0 0 1 20
+panel disk 0 0 25 63 0 0 1 20
+end_surface
+
+start_compartment golgi
+surface golgi_mem
+point 0 0 45
+point 0 0 30
+end_compartment
+
+
+#ERsurface
+start_surface ER_mem
+action all both reflect
+color both green
+panel cyl 0 0 -50 0 0 -40 80 20 20 
+panel cyl 0 0 -35 0 0 -25 80 20 20 
+panel disk 0 0 -50 80 0 0 1 20
+panel disk 0 0 -40 80 0 0 1 20
+panel disk 0 0 -35 80 0 0 1 20
+panel disk 0 0 -25 80 0 0 1 20
+end_surface
+
+start_compartment ER
+surface ER_mem
+point 0 0 -45
+point 0 0 -30
+end_compartment
+
+#mito
+start_surface mito_mem 
+action all both reflect
+polygon both edge
+color both blue
+panel sph 50 50 0 17 20 20
+panel sph -50 -50 0 17 20 20
+panel sph 20 20 0 17 20 20 
+panel sph -20 -20 0 17 20 20 
+panel sph 50 -50 0 17 20 20 
+panel sph -50 50 0 17 20 20 
+panel sph 20 -20 0 17 20 20
+panel sph -20 20 0 17 20 20 
+panel sph 70 0 0 17 20 20 
+panel sph -70 0 0 17 20 20 
+panel sph 0 70 0 17 20 20 
+panel sph 0 -70 0 17 20 20 
+panel sph 0 0 70 17 20 20
+panel sph 0 0 -70 17 20 20
+end_surface
+
+start_compartment mito
+surface mito_mem
+point 50 50 0 
+point -50 -50 0 
+point 20 20 0 
+point -20 -20 0 
+point 50 -50 0 
+point -50 50 0 
+point 20 -20 0 
+point -20 20 0 
+point 70 0 0 
+point -70 0 0 
+point 0 70 0 
+point 0 -70 0 
+point 0 0 70 
+point 0 0 -70 
+end_compartment
+
+
+
+start_compartment inside
+surface PM
+point 0 0 0
+end_compartment
+
+start_compartment cytoplasm
+compartment equal inside
+compartment andnot mito
+compartment andnot ER
+compartment andnot golgi
+end_compartment
+
+#MOLECULES
+difc Ca 100
+color Ca(all) yellow
+display_size Ca(all) 0.1
+compartment_mol 30000 Ca cytoplasm
+
+difc ATP 100
+compartment_mol 900000000 ATO cytoplasm
+
+end_file
+

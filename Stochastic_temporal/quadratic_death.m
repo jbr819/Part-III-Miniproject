@@ -1,21 +1,18 @@
-% Initialise run variables
 divRate = 0.25;
 probSym = 0.22;
-proliffCoeff =  
-DiffCoeff = 
-prolifRate=(divRate*probSym*0.48); % birth rate coefficient
-diffRate=(divRate*probSym*0.52); % death rate coefficient
+prolifCoeff = 0.0275;
+diffCoeff = 0.0006875;
 asymRate=(divRate*(1-probSym)); % rate of asymmetric division
-X = 400000; % for this model equilibrium population is equal to prolif rate / diff rate
-runs = 1;
+X = 40; % for this model equilibrium population is equal to prolif rate / diff rate
+runs = 5;
 extinctArray = zeros(runs,1);  % array to contain extinction time
 
 for k=1:runs
-    N=1000000; % Number of jumps
+    N=1000; % Number of jumps
     t=zeros(N,1);  % array containing time
     dt=zeros(N,1); % array containing time intervals
-    z=zeros(N,2);  % state variable array (contains population)
-    z(2,:)=X;    % initial values input into first array of state variabl array
+    z=zeros(N,1);  % state variable array (contains population)
+    z(1,:)=X;    % initial values input into first array of state variabl array
     for i=2:N
         if z(i-1) == 0
             fprintf("Extincition occurred at %d\n", t(i-1));
@@ -37,13 +34,5 @@ for k=1:runs
     hold on
 end
 
-disp(extinctArray);
-histogram(extinctArray, 'Normalization','probability')
-
-
-
-% Generate weighted mean (last element not used)
-% transpose(dt)*z/sum(dt)
-
-% Generate weighted sum of squares (last element not used)
-% var(z,dt)
+%disp(extinctArray);
+%histogram(extinctArray, 'Normalization','probability')
