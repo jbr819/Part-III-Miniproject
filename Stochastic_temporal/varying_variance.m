@@ -1,10 +1,9 @@
 % Initialise run variables
 divRate = 0.25;
-probSym = 0.22;
-proliffCoeff =  
-DiffCoeff = 
-prolifRate=(divRate*probSym*0.48); % birth rate coefficient
-diffRate=(divRate*probSym*0.52); % death rate coefficient
+probSym = 0.22; 
+prolifDiffRatio = 0.5;
+prolifRate=(divRate*probSym*(1-prolifDiffRatio)); % birth rate coefficient
+diffRate=(divRate*probSym*prolifDiffRatio); % death rate coefficient
 asymRate=(divRate*(1-probSym)); % rate of asymmetric division
 X = 400000; % for this model equilibrium population is equal to prolif rate / diff rate
 runs = 1;

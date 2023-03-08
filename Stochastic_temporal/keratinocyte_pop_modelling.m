@@ -8,7 +8,6 @@ runs = 1000;
 N=5000; %number of jumps
 extinctArray = zeros(runs,1);  % array to contain extinction time
 popsAtTimepoint = zeros(N, runs);
-timepointOfFinalN = zeros(runs,1);
 
 for k=1:runs
     t=zeros(N,1);  % array containing time
@@ -49,3 +48,4 @@ finalTime = round(min(timepointOfFinalN));
 trimmedPopsAtTimepoint = popsAtTimepoint(1:finalTime,:);
 csvwrite("populations_for_PDE_boundary"  , trimmedPopsAtTimepoint);
 disp(width(trimmedPopsAtTimepoint))
+
