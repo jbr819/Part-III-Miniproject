@@ -1,7 +1,9 @@
-divRate = 0.25;
-probSym = 0.22;
-prolifCoeff = 0.0275; % divRate * 1/2 * probSym = probProlif
-diffCoeff = 0.0006875;  % parameter fit by using equilibrium cell density of 40 per mm^2 (0.0275/40)
+divRate = 0.25; %(cell week-1)
+probSym = 0.22; 
+ProbProlif = 0.5; %this is the parameter to change
+eqmStemDensity = 40;
+prolifRateCoeff = divRate * probSym * ProbProlif; % divRate * 1/2 * probSym = probProlif
+diffRateCoeff = prolifRateCoeff / eqmStemDensity;  % parameter fit by using equilibrium cell density of 40 per mm^2 (0.0275/40)
 asymRate=(divRate*(1-probSym)); % rate of asymmetric division
 X = [40, 0]; % stem cell = index 1, keratinocyte = index 2
 runs = 5;
@@ -20,17 +22,18 @@ for k=1:runs
             break
         else
         x=z(i-1,:); % set pop of stem/diff cells as previous size size
-        rates=[prolifCoeff*x(1) asymRate*x(1) diffCoeff*x(1)*x(1)]; %set birth and death rates based on current pop
+        rates=[prolifRateCoeff*x(1) asymRate*x(1) diffRateCoeff*x(1)*x(1)]; %set birth and death rates based on current pop
         R=[1,0; 0,1; -1,2]; % set change in pop size for each of the two rates
         lam=sum(rates); % calculate the total rate. Parameter of expo. dist. used to determine next event is the total rate of all possible events
         dt(i-1)= -log(rand)/lam; %set time interval based on the exponenetial distribution
         t(i)=t(i-1)+dt(i-1); %update time array
         rates=rates/lam; %normalise the rates
         reac=1+sum(rand>cumsum(rates)); %determine which event occured based on normalised rates
-        z(i,:)=z(i-1,:)+R(:,reac)'; %update pop size based on event that occured
+        z(i,2)=z(i-1,2)+R(reac,2)'; %update pop size based on event that occured
+        z(i,1)=z(i-1,1)+R(reac,1)'; %update pop size based on event that occured
         end
     end
-    plot(t, z(2));
+    plot(t, z);
     title('Population of Stem Cells in 1mm^2 patches of skin')
     xlabel('Time (weeks)')
     ylabel('Keratinocyte population')
