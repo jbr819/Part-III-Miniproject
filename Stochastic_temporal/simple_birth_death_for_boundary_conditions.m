@@ -1,7 +1,7 @@
 divRate = 0.25;
 probSym = 0.22;
-prolifCoeff = 0.0275;
-diffCoeff = 0.0006875;
+prolifCoeff = 0.0275;  % divRate * 1/2 * probSym = probProlif
+diffCoeff = 0.0006875; % parameter fit by using equilibrium cell density of 40 per mm^2 (0.0275/40)
 asymRate=(divRate*(1-probSym)); % rate of asymmetric division
 X = 40; % stem cell population for this model equilibrium population is equal to prolif rate / diff rate
 runs = 1000;
@@ -30,6 +30,7 @@ for k=1:runs
         rates=rates/lam; %normalise the rates
         reac=1+sum(rand>cumsum(rates)); %determine which event occured based on normalised rates
         z(i,:)=z(i-1,:)+R(:,reac)'; %update pop size based on event that occured
+        %pop of X at step i = pop at step i-1 + stoichiometry matrix
         popsAtTimepoint(round(t(i))+1, k) = x; %%this might be an issue, if t is larger than N indexing will be out of bounds
         end
         if i == N

@@ -1,6 +1,6 @@
 divRate = 0.25; %(cell week-1)
 probSym = 0.22; % lambda
-ProbProlif = 0.2;
+ProbProlif = 0.;
 ProbDiff = 1-ProbProlif;
 eqmStemDensity = 40;
 prolifRateCoeff = divRate * probSym * ProbProlif; % divRate * 1/2 * probSym = probProlif
@@ -9,9 +9,12 @@ asymRateCoeff =(divRate*(1-probSym)); % rate of asymmetric division
 competitiveDiff = 0.00055; % a rate constant controlling rate of winner-loser to achieve ss pop of 40 (per mm^2)
 keratinShedRateCoeff = 0.065; % (cells per week per mm2)
 X = [40, 2700]; % stem cell = index 1, keratinocyte = index 2
-runs = 1;
+runs = 10000;
 N=500000; %number of jumps
 extinctArray = zeros(runs,1);  % array to contain extinction time
+
+startTimeOfLesion = 20;
+endTimeOfLesion = 30;
 
 for k=1:runs
     t=zeros(N,1);  % array containing time
@@ -24,7 +27,10 @@ for k=1:runs
             extinctArray(k) = t(i-1);
             break
         else
-        x=z(i-1,:); % set pop of stem/diff cells as previous size size
+            if t(N-1) > startTimeOfLesion && t(N-1) < endTimeOfLesion
+            probProlif = 0.2;
+            end
+            x=z(i-1,:); % set pop of stem/diff cells as previous size size
         rates=[prolifRateCoeff*x(1) asymRateCoeff*x(1) diffRateCoeff*x(1) keratinShedRateCoeff*x(2) competitiveDiff*x(1)*x(1)]; %set birth and death rates based on current pop
         R=[1,0; 0,16; -1,32; 0,-1; -1,32]; % set change in pop size for each of the two rates
         lam=sum(rates); % calculate the total rate. Parameter of expo. dist. used to determine next event is the total rate of all possible events
@@ -36,17 +42,18 @@ for k=1:runs
         z(i,1)=z(i-1,1)+R(reac,1)'; %update pop size based on event that occured
         end
     end
-    yyaxis left
-    plot(t(2:N), z(2:N,1), "Color", "Blue")
-    xlim([0,52])
-    ylim([0,60])
-    ylabel("Population of Epidermal Stem Cells", "Color","Blue");
-    yyaxis right
-    plot(t(2:N), z(2:N,2))
-    ylim([0,3500])
-    ylabel('Population of Keratinocytes')
-    title('Population of cells in a healthy 1mm^2 patch of skin')
-    xlabel('Time (weeks)')
+    %yyaxis left
+    %plot(t(2:N), z(2:N,1), "Color", "Blue")
+    %xlim([0,52])
+    %ylim([0,60])
+    %ylabel("Population of Epidermal Stem Cells", "Color","Blue");
+    %yyaxis right
+    %plot(t(2:N), z(2:N,2))
+    %ylim([0,3500])
+    %ylabel('Population of Keratinocytes')
+    %title('Population of cells in a healthy 1mm^2 patch of skin')
+    %xlabel('Time (weeks)')
 end
 
+probHist = histogram(extinctArray, "Normalization", "probability");
 
