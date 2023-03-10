@@ -9,18 +9,23 @@ asymRateCoeff =(divRate*(1-probSym)); % rate of asymmetric division
 competitiveDiff = 0.00055; % a rate constant controlling rate of winner-loser to achieve ss pop of 40 (per mm^2)
 keratinShedRateCoeff = 0.065; % (cells per week per mm2)
 X = [40, 2700]; % stem cell = index 1, keratinocyte = index 2
-runs = 1;
-N=50000; %number of jumps
-extinctArray = zeros(runs,1);  % array to contain extinction time
+runs = 3000;
+N=150000; %number of jumps
+extinctArray = zeros(runs,1);  % array to contain extinction time                                                                                                                                                    
 
-startTimeOfLesion = 50;
-endTimeOfLesion = 70;
+startTimeOfLesion = 250;
+endTimeOfLesion = 260;
+
+stemPopsAtTimepoint = zeros(N, runs);
+keratPopsAtTimepoint = zeros(N, runs);
+timepointOfFinalN = zeros(runs,1);
 
 for k=1:runs
     t=zeros(N,1);  % array containing time
     dt=zeros(N,1); % array containing time intervals
     z=zeros(N,2);  % state variable array (contains population)
     z(1,:)= X;     % initial values input into first array of state variable array
+    fprintf("Run %d is occuring\n", k);
     for i=2:N
         if z(i-1,1) == 0
             fprintf("Extincition occurred at %d\n", t(i-1));
@@ -28,10 +33,8 @@ for k=1:runs
             break
         else
             if (t(i-1) > startTimeOfLesion) && (t(i-1) < endTimeOfLesion)
-                disp("Lesioning\n");
                 ProbProlif = 0.3;
                 ProbDiff = 1-ProbProlif;
-                eqmStemDensity = 40;
                 prolifRateCoeff = divRate * probSym * ProbProlif; % divRate * 1/2 * probSym = probProlif    
                 diffRateCoeff = divRate * probSym * ProbDiff;  % this is too well coded, needs to allow eqm stem cell density to vary with different proliferation rate constants
                 asymRateCoeff =(divRate*(1-probSym)); % rate of asymmetric division
@@ -46,10 +49,15 @@ for k=1:runs
                 reac=1+sum(rand>cumsum(rates)); %determine which event occured based on normalised rates
                 z(i,2)=z(i-1,2)+R(reac,2)'; %update pop size based on event that occured
                 z(i,1)=z(i-1,1)+R(reac,1)'; %update pop size based on event that occured
+                
+                stemPopsAtTimepoint(round(t(i))+1, k) = x(1); %%fill in populations at discrete time
+                keratPopsAtTimepoint(round(t(i))+1, k) = x(2); %fill in keratinocyte
+                if i == N
+                    timepointOfFinalN(k) = t(i);
+                end
             else
                 ProbProlif = 0.7;
                 ProbDiff = 1-ProbProlif;
-                eqmStemDensity = 40;
                 prolifRateCoeff = divRate * probSym * ProbProlif; % divRate * 1/2 * probSym = probProlif    
                 diffRateCoeff = divRate * probSym * ProbDiff;  % this is too well coded, needs to allow eqm stem cell density to vary with different proliferation rate constants
                 asymRateCoeff =(divRate*(1-probSym)); % rate of asymmetric division
@@ -65,6 +73,12 @@ for k=1:runs
                 reac=1+sum(rand>cumsum(rates)); %determine which event occured based on normalised rates
                 z(i,2)=z(i-1,2)+R(reac,2)'; %update pop size based on event that occured
                 z(i,1)=z(i-1,1)+R(reac,1)'; %update pop size based on event that occured
+
+                stemPopsAtTimepoint(round(t(i))+1, k) = x(1); %%fill in populations at discrete time
+                keratPopsAtTimepoint(round(t(i))+1, k) = x(2); %fill in keratinocyte
+                if i == N
+                    timepointOfFinalN(k) = t(i);
+                end
             end
         end
     end
@@ -81,4 +95,10 @@ for k=1:runs
     xlabel('Time (weeks)')
 end
 
-
+disp(timepointOfFinalN);
+finalTime = round(min(timepointOfFinalN));
+trimmedStemPopsAtTimepoint = stemPopsAtTimepoint(1:finalTime,:);
+trimmedKeratPopsAtTimepoint = keratPopsAtTimepoint(1:finalTime,:);
+csvwrite("3000_stem_lesion_pop_data_for_R_analysis"  , trimmedStemPopsAtTimepoint);
+csvwrite("3000_kerat_lesion_pop_data_for_R_analysis"  , trimmedKeratPopsAtTimepoint);
+disp(width(trimmedKeratPopsAtTimepoint))
