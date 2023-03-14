@@ -7,4 +7,4 @@ ATP2C1 gene codes for the secretory pathway Ca2+/Mn2+-ATPase pump type 1 (SPCA1)
 
 1. We have constructed a executable model implemented using **BMA** to model how Hailey Hailey disease may disrupt the calcium **signalling pathways** within Keratinocytes.
 2. We have modelled skin cell population homeostatis in the epidermis as a **stochastic process**, simulated via the **Gillespie algorithm**.
-3. We have used **PDEs** to model Keratinocyte Density in the epidermis.
+3. We have used **PDEs** to model Keratinocyte density in the epidermis.
