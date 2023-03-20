@@ -8,6 +8,10 @@ ATP2C1 gene codes for the secretory pathway Ca2+/Mn2+-ATPase pump type 1 (SPCA1)
 2. We have modelled skin cell population homeostatis in the epidermis as a **stochastic process**, simulated via the **Gillespie algorithm**.
 3. We have used **PDEs** to model Keratinocyte density in the epidermis.
 
+### Poster 
+![alt text](https://github.com/jbr819/Part-III-Miniproject/blob/main/Poster.jpg)
+
+
 ### PDE Modelling Simulation 
 ![alt text](https://github.com/jbr819/Part-III-Miniproject/blob/main/PDE-model/PDE_sim_with_histology.gif)
 
